@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 
 const connectDB = require("./config/db");
 const projectRoutes = require("./routes/projectRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 dotenv.config();
 connectDB();
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/projects", projectRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.get("/", (req, res) => {
   res.send("Portfolio API Running");
