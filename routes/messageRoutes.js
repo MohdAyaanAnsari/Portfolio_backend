@@ -1,22 +1,51 @@
 const express = require("express");
 const router = express.Router();
-
-const Message = require("../models/Message");
+const nodemailer = require("nodemailer");
 
 router.post("/", async (req, res) => {
   try {
-    const message = new Message(req.body);
-    await message.save();
+    const { fullName, email, phone, subject, message } = req.body;
 
-    res.json({ success: true, message: "Message saved" });
+    // Create transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.sendermail, 
+        pass: process.env.pass    
+      }
+    });
+
+    // Email content
+    const mailOptions = {
+      from: email,
+      to: process.env.recievermail, // where you want to receive
+      subject: `New Contact: ${subject}`,
+      html: `
+        <h3>New Contact Form Message</h3>
+        <p><b>Name:</b> ${fullName}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Phone:</b> ${phone}</p>
+        <p><b>Message:</b> ${message}</p>
+      `
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    console.log("📧 Email sent successfully!");
+
+    res.json({
+      success: true,
+      message: "Message sent to Gmail successfully"
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false });
+    console.error("Email Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Email not sent"
+    });
   }
-});
-
-router.get("/", async (req, res) => {
-  const messages = await Message.find().sort({ createdAt: -1 });
-  res.json(messages);
 });
 
 module.exports = router;
