@@ -8,11 +8,13 @@ router.post("/", async (req, res) => {
 
     // Create transporter
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
-        user: process.env.sendermail, 
-        pass: process.env.pass    
-      }
+        user: process.env.sendermail,
+        pass: process.env.pass,
+      },
     });
 
     // Email content
