@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
     // Create transporter
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-      port: 465,
+      port: 587,
       secure: true,
       auth: {
         user: process.env.sendermail,
