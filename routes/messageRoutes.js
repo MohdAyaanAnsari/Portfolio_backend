@@ -31,6 +31,9 @@ router.post("/", async (req, res) => {
       `
     };
 
+
+    await transporter.verify();
+    console.log("SMTP Connected");
     // Send email
     await transporter.sendMail(mailOptions);
 
